@@ -3,6 +3,8 @@ import cookeParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
+import userRouter from './routes/user.routes.js';
+
 dotenv.config();
 
 
@@ -17,6 +19,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cookeParser());
+
+
+
+app.use("/api/v1/users",userRouter);
+
 
 export {app};
 
