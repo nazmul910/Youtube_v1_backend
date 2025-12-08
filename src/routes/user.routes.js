@@ -6,7 +6,6 @@ const router = Router();
 
 
   router.post("/register",upload.fields([{name:"avatar",maxCount:1},{name:"coverImage",maxCount:1}]),registerUser)
-  
-  router.get("/register",registerUser)
+
 
 export default router;

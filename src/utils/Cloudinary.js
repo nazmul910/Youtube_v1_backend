@@ -7,7 +7,7 @@ cloudinary.config({
     api_secret:process.env.CLOUDINARY_API_SECRET
 });
 
-const uloadOnCloudinary = async (loaclFilePath) =>{
+const uploadOnCloudinary = async (loaclFilePath) =>{
     try {
         if(!loaclFilePath) return null;
 
@@ -24,4 +24,4 @@ const uloadOnCloudinary = async (loaclFilePath) =>{
     }
 }
 
-export {uloadOnCloudinary};
+export {uploadOnCloudinary};
