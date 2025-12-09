@@ -14,13 +14,18 @@ const registerUser = asyncHandler(async (req,res) =>{
    const existingUser = await User.findOne({
         $or: [{ email },{ userName }]
     });
-
+ 
     if(existingUser){
         throw new ApiError(409,"User already exists");
     }
 
    const avatarLocalPath = req.files?.avatar[0]?.path;
-   const coverImageLocalPath = req.files?.coverImage[0]?.path;
+   
+   let coverImageLocalPath;
+
+   if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+    coverImageLocalPath = req.files.coverImage[0].path;;
+   }
 
 
    if(!avatarLocalPath){
@@ -52,7 +57,7 @@ const registerUser = asyncHandler(async (req,res) =>{
 
    return res.status(201).json(
     new ApiResponse(
-        201,
+        200,
         createdUser,
         "User registered successfully",
     )
@@ -64,4 +69,37 @@ const registerUser = asyncHandler(async (req,res) =>{
 
 });
 
-export {registerUser}; 
+const loginUser = asyncHandler(async (req,res) =>{
+    const {email,userName,password} = req.body;
+
+    if(!email || !userName){
+        throw new ApiError(400,"Email or Username is required");
+    }
+
+    const user = await User.findOne({
+        $or:[{email}, {userName}]
+    })
+
+    if(!user){
+        throw new ApiError(404,"User not found");
+    };
+
+    const isPasswordValid = await user.isPasswordCorrect(password);
+    
+    if(!isPasswordValid){
+        throw new ApiError(401,"Invalid credentials");
+    };
+
+
+    const {accessToken,refreshToken} = await generateAccessAndRefreshToken(user._id);
+
+
+    
+    });
+
+
+export {
+    registerUser,
+    loginUser
+
+}; 
